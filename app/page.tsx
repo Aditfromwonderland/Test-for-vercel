@@ -1,10 +1,15 @@
 'use client'
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formSchema, FormData } from "../lib/schemas";
 
 export default function Home() {
+  // State for tracking form submission status and errors
+  const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
   // Initialize react-hook-form with zod schema validation
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -22,10 +27,42 @@ export default function Home() {
   const { register, handleSubmit, formState } = form;
   const { errors, isSubmitting } = formState;
 
-  // Form submission handler
-  const onSubmit = (data: FormData) => {
-    console.log('Form submitted with data:', data);
-    // In the future, this will call the API endpoint
+  // Form submission handler - now async to handle API call
+  const onSubmit = async (data: FormData) => {
+    try {
+      // Reset status before submission
+      setSubmissionStatus('idle');
+      setErrorMessage('');
+      
+      // Call the API route
+      const response = await fetch('/api/generate-guide', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      // Parse the response
+      const result = await response.json();
+      
+      // Handle non-successful responses
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to generate guide');
+      }
+      
+      // Handle successful response
+      console.log('Success:', result);
+      setSubmissionStatus('success');
+      
+      // Later, we'll redirect to the guide page
+      // For now, just show a success message
+    } catch (error) {
+      // Handle errors
+      console.error('Error submitting form:', error);
+      setSubmissionStatus('error');
+      setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred');
+    }
   };
 
   return (
@@ -40,6 +77,19 @@ export default function Home() {
             Tell us a bit about yourself to get your personalized networking guide!
           </p>
         </div>
+        
+        {/* Submission Status Messages */}
+        {submissionStatus === 'success' && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-md text-green-700">
+            Guide generated successfully! 🎉
+          </div>
+        )}
+        
+        {submissionStatus === 'error' && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md text-red-700">
+            Error: {errorMessage || 'Failed to generate guide. Please try again.'}
+          </div>
+        )}
         
         {/* Form */}
         <div className="bg-white shadow-lg rounded-lg p-6 md:p-8 border border-gray-200">
