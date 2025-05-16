@@ -1,28 +1,30 @@
 'use client'
 
-import { useState, FormEvent } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { formSchema, FormData } from "../lib/schemas";
 
 export default function Home() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    workExperience: '',
-    industryExperience: '',
-    motivation: '',
-    networkingChallenge: ''
+  // Initialize react-hook-form with zod schema validation
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      workExperience: '',
+      industryExperience: '',
+      motivation: '',
+      networkingChallenge: '',
+    },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  // Destructure useful methods and properties from form
+  const { register, handleSubmit, formState } = form;
+  const { errors, isSubmitting } = formState;
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Form submitted with data:', formData);
+  // Form submission handler
+  const onSubmit = (data: FormData) => {
+    console.log('Form submitted with data:', data);
     // In the future, this will call the API endpoint
   };
 
@@ -41,22 +43,23 @@ export default function Home() {
         
         {/* Form */}
         <div className="bg-white shadow-lg rounded-lg p-6 md:p-8 border border-gray-200">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Name field */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Name
               </label>
               <input
-                type="text"
                 id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue focus:border-blue"
+                {...register('name')}
+                className={`w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue focus:border-blue ${
+                  errors.name ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300'
+                }`}
                 placeholder="Your full name"
-                required
               />
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
+              )}
             </div>
 
             {/* Email field */}
@@ -65,15 +68,17 @@ export default function Home() {
                 Email
               </label>
               <input
-                type="email"
                 id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue focus:border-blue"
+                type="email"
+                {...register('email')}
+                className={`w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue focus:border-blue ${
+                  errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300'
+                }`}
                 placeholder="your.email@example.com"
-                required
               />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+              )}
             </div>
 
             {/* Work Experience field */}
@@ -83,14 +88,16 @@ export default function Home() {
               </label>
               <textarea
                 id="workExperience"
-                name="workExperience"
-                value={formData.workExperience}
-                onChange={handleChange}
+                {...register('workExperience')}
                 rows={3}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue focus:border-blue"
+                className={`w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue focus:border-blue ${
+                  errors.workExperience ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300'
+                }`}
                 placeholder="Briefly describe your work experience"
-                required
               />
+              {errors.workExperience && (
+                <p className="mt-1 text-sm text-red-500">{errors.workExperience.message}</p>
+              )}
             </div>
 
             {/* Industry Experience field */}
@@ -100,14 +107,16 @@ export default function Home() {
               </label>
               <textarea
                 id="industryExperience"
-                name="industryExperience"
-                value={formData.industryExperience}
-                onChange={handleChange}
+                {...register('industryExperience')}
                 rows={3}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue focus:border-blue"
+                className={`w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue focus:border-blue ${
+                  errors.industryExperience ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300'
+                }`}
                 placeholder="What industries have you worked in?"
-                required
               />
+              {errors.industryExperience && (
+                <p className="mt-1 text-sm text-red-500">{errors.industryExperience.message}</p>
+              )}
             </div>
 
             {/* Motivation field */}
@@ -117,14 +126,16 @@ export default function Home() {
               </label>
               <textarea
                 id="motivation"
-                name="motivation"
-                value={formData.motivation}
-                onChange={handleChange}
+                {...register('motivation')}
                 rows={3}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue focus:border-blue"
+                className={`w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue focus:border-blue ${
+                  errors.motivation ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300'
+                }`}
                 placeholder="What motivates you to network and connect with others?"
-                required
               />
+              {errors.motivation && (
+                <p className="mt-1 text-sm text-red-500">{errors.motivation.message}</p>
+              )}
             </div>
 
             {/* Networking Challenge field */}
@@ -134,23 +145,26 @@ export default function Home() {
               </label>
               <textarea
                 id="networkingChallenge"
-                name="networkingChallenge"
-                value={formData.networkingChallenge}
-                onChange={handleChange}
+                {...register('networkingChallenge')}
                 rows={3}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue focus:border-blue"
+                className={`w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue focus:border-blue ${
+                  errors.networkingChallenge ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300'
+                }`}
                 placeholder="What challenges do you face when networking?"
-                required
               />
+              {errors.networkingChallenge && (
+                <p className="mt-1 text-sm text-red-500">{errors.networkingChallenge.message}</p>
+              )}
             </div>
 
             {/* Submit button */}
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full py-3 px-4 bg-gradient-to-r from-orange to-coral text-white font-medium rounded-md shadow-sm hover:from-coral hover:to-orange transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coral"
+                disabled={isSubmitting}
+                className="w-full py-3 px-4 bg-gradient-to-r from-orange to-coral text-white font-medium rounded-md shadow-sm hover:from-coral hover:to-orange transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coral disabled:opacity-70"
               >
-                Get My Guide
+                {isSubmitting ? 'Processing...' : 'Get My Guide'}
               </button>
             </div>
           </form>
