@@ -24,17 +24,53 @@ export default function GuidePage() {
         setIsLoading(true)
         setError(null)
         
+        // First, try to fetch the guide from the API (DynamoDB)
         const response = await fetch(`/api/guide/${id}`)
-        const data = await response.json()
         
-        if (!response.ok) {
-          throw new Error(data.message || 'Failed to fetch guide')
+        // Handle different API response statuses
+        if (response.status === 404) {
+          // Try localStorage as fallback if the API returns 404
+          const localGuide = localStorage.getItem(`coffee-chat-guide-${id}`)
+          
+          if (localGuide) {
+            // If found in localStorage, use that
+            setGuide(JSON.parse(localGuide))
+            return
+          } else {
+            // If not in localStorage either, show not found error
+            throw new Error("Guide not found. It may have expired or been removed.")
+          }
+        } else if (!response.ok) {
+          // For other non-OK responses, check if it's a server error
+          if (response.status >= 500) {
+            throw new Error("Server error. Please try again later.")
+          } else {
+            // For other client errors
+            const data = await response.json()
+            throw new Error(data.message || "Failed to fetch guide")
+          }
         }
         
+        // If we get here, the API response was OK
+        const data = await response.json()
         setGuide(data.guide)
       } catch (err) {
         console.error('Error fetching guide:', err)
         setError(err instanceof Error ? err.message : 'An error occurred while fetching the guide')
+        
+        // Last resort: try localStorage if we haven't already
+        if (!error?.includes("not found")) {
+          const localGuide = localStorage.getItem(`coffee-chat-guide-${id}`)
+          if (localGuide) {
+            try {
+              setGuide(JSON.parse(localGuide))
+              setError(null) // Clear error if localStorage retrieval succeeds
+            } catch (parseErr) {
+              console.error('Error parsing guide from localStorage:', parseErr)
+              // Keep the original error if localStorage parsing fails
+            }
+          }
+        }
       } finally {
         setIsLoading(false)
       }

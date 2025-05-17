@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { formSchema } from "../../../lib/schemas";
 import { OpenAI } from "openai";
+import { v4 as uuidv4 } from "uuid";
+import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { docClient, GUIDES_TABLE_NAME } from "../../../lib/dynamodb";
+import { Guide } from "../../../lib/store";
 
 // Initialize the OpenAI client with the API key from environment variables
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -84,9 +88,35 @@ export async function POST(request: Request) {
       // Parse the JSON response
       const guideContent = JSON.parse(responseContent || "{}");
       
-      // Return the guide content
+      // Generate a unique ID for the guide
+      const guideId = uuidv4();
+      
+      // Create a Guide object
+      const guide: Guide = {
+        id: guideId,
+        userInput,
+        guideContent,
+        createdAt: new Date().toISOString()
+      };
+      
+      try {
+        // Store the guide in DynamoDB
+        await docClient.send(
+          new PutCommand({
+            TableName: GUIDES_TABLE_NAME,
+            Item: guide
+          })
+        );
+        console.log(`Guide ${guideId} saved to DynamoDB`);
+      } catch (dbError) {
+        console.error("Error saving guide to DynamoDB:", dbError);
+        // Continue anyway to return the guide to the user
+      }
+      
+      // Return the guide ID and content
       return NextResponse.json({ 
         message: "Guide generated successfully", 
+        guideId,
         guideContent 
       }, { status: 200 });
       

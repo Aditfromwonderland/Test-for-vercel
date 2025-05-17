@@ -8,6 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.465.0",
+    "@aws-sdk/lib-dynamodb": "^3.465.0",
     "@hookform/resolvers": "^3.3.2",
     "next": "14.0.4",
     "openai": "^4.20.0",

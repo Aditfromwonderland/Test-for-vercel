@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getGuideById } from "../../../../lib/store";
+import { GetCommand } from "@aws-sdk/lib-dynamodb";
+import { docClient, GUIDES_TABLE_NAME } from "../../../../lib/dynamodb";
 
 /**
  * Handle GET requests to fetch a guide by ID
@@ -19,20 +20,25 @@ export async function GET(
       );
     }
 
-    // Fetch the guide from the store
-    const guide = getGuideById(id);
-
+    // Fetch the guide from DynamoDB
+    const result = await docClient.send(
+      new GetCommand({
+        TableName: GUIDES_TABLE_NAME,
+        Key: { id }
+      })
+    );
+    
     // Check if the guide exists
-    if (!guide) {
+    if (!result.Item) {
       return NextResponse.json(
         { message: "Guide not found" },
         { status: 404 }
       );
     }
-
+    
     // Return the guide data
     return NextResponse.json(
-      { guide },
+      { guide: result.Item },
       { status: 200 }
     );
   } catch (error) {
