@@ -4,11 +4,15 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formSchema, FormData } from "../lib/schemas";
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   // State for tracking form submission status and errors
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  
+  // Initialize router for navigation
+  const router = useRouter();
 
   // Initialize react-hook-form with zod schema validation
   const form = useForm<FormData>({
@@ -34,7 +38,7 @@ export default function Home() {
       setSubmissionStatus('idle');
       setErrorMessage('');
       
-      // Call the API route - updated to use the new endpoint
+      // Call the API route
       const response = await fetch('/api/create-guide', {
         method: 'POST',
         headers: {
@@ -53,10 +57,13 @@ export default function Home() {
       
       // Handle successful response
       console.log('Success:', result);
-      setSubmissionStatus('success');
       
-      // Later, we'll redirect to the guide page
-      // For now, just show a success message
+      // Extract the guideId from the result
+      const { guideId } = result;
+      
+      // Navigate to the guide page
+      router.push(`/guide/${guideId}`);
+      
     } catch (error) {
       // Handle errors
       console.error('Error submitting form:', error);
@@ -78,13 +85,7 @@ export default function Home() {
           </p>
         </div>
         
-        {/* Submission Status Messages */}
-        {submissionStatus === 'success' && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-md text-green-700">
-            Guide generated successfully! 🎉
-          </div>
-        )}
-        
+        {/* Error Message */}
         {submissionStatus === 'error' && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md text-red-700">
             Error: {errorMessage || 'Failed to generate guide. Please try again.'}
