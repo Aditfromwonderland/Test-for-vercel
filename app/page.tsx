@@ -34,8 +34,8 @@ export default function Home() {
       setSubmissionStatus('idle');
       setErrorMessage('');
       
-      // Call the API route
-      const response = await fetch('/api/generate-guide', {
+      // Call the API route - updated to use the new endpoint
+      const response = await fetch('/api/create-guide', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
