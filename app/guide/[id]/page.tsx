@@ -137,6 +137,27 @@ export default function GuidePage() {
             </h2>
           </div>
 
+          {/* About Coffee Chats in Consulting - New Static Section */}
+          <div className="px-6 py-6 border-b border-gray-200 bg-gradient-to-r from-blue/10 to-green/10">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Understanding Coffee Chats in Consulting
+            </h3>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <span className="text-blue font-bold mr-2">•</span>
+                <span className="text-gray-700">A coffee chat is an online/offline opportunity (typically 15-20 minutes) that helps candidates learn more about consulting and life at a specific firm.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue font-bold mr-2">•</span>
+                <span className="text-gray-700">The key objective is learning more about the firm and consulting career paths. As the consulting recruitment process is fairly streamlined, companies often post coffee chat availabilities on their websites or through campus representatives.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue font-bold mr-2">•</span>
+                <span className="text-gray-700">Cold reach outs might not be needed.</span>
+              </li>
+            </ul>
+          </div>
+
           {/* Key Strengths */}
           <div className="px-6 py-6 border-b border-gray-200">
             <h3 className="text-xl font-semibold text-green mb-4">
