@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   // State for tracking form submission status and errors
-  const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
   
   // Initialize router for navigation
@@ -34,8 +34,8 @@ export default function Home() {
   // Form submission handler - now async to handle API call
   const onSubmit = async (data: FormData) => {
     try {
-      // Reset status before submission
-      setSubmissionStatus('idle');
+      // Reset status and show loading state
+      setSubmissionStatus('loading');
       setErrorMessage('');
       
       // Call the API route
@@ -57,9 +57,18 @@ export default function Home() {
       
       // Handle successful response
       console.log('Success:', result);
+      setSubmissionStatus('success');
       
-      // Extract the guideId from the result
-      const { guideId } = result;
+      // Extract the guideId and guideContent from the result
+      const { guideId, guideContent } = result;
+      
+      // Store the guide content in localStorage for retrieval on the guide page
+      localStorage.setItem(`coffee-chat-guide-${guideId}`, JSON.stringify({
+        id: guideId,
+        userInput: data,
+        guideContent: guideContent,
+        createdAt: new Date().toISOString()
+      }));
       
       // Navigate to the guide page
       router.push(`/guide/${guideId}`);
@@ -71,6 +80,35 @@ export default function Home() {
       setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred');
     }
   };
+
+  // Loading screen component
+  const LoadingScreen = () => (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4 animate-fadeIn">
+      <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl bg-gradient-to-r from-coral to-blue bg-clip-text text-transparent mb-8">
+        Coffee-Chat Coach
+      </h1>
+      
+      <div className="relative w-24 h-24 mb-8">
+        {/* Multi-color spinner */}
+        <div className="absolute w-full h-full rounded-full border-4 border-t-coral border-r-orange border-b-blue border-l-green animate-spin"></div>
+      </div>
+      
+      <div className="text-center max-w-md">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-3">Creating your personalized guide...</h2>
+        <p className="text-gray-600">
+          We're analyzing your information and crafting a tailored consulting coffee chat guide just for you.
+        </p>
+        <p className="text-gray-500 mt-4 text-sm animate-pulse">
+          This usually takes about 15-20 seconds
+        </p>
+      </div>
+    </div>
+  );
+
+  // If in loading state, show the loading screen
+  if (submissionStatus === 'loading') {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
