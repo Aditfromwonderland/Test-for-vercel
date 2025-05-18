@@ -85,7 +85,7 @@ export default function Home() {
   const LoadingScreen = () => (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4 animate-fadeIn">
       <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl bg-gradient-to-r from-coral to-blue bg-clip-text text-transparent mb-8">
-        Coffee-Chat Coach
+        Coffee-Chat Copilot
       </h1>
       
       <div className="relative w-24 h-24 mb-8">
@@ -116,7 +116,7 @@ export default function Home() {
         {/* Header with gradient text */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl bg-gradient-to-r from-coral to-blue bg-clip-text text-transparent">
-            Coffee-Chat Coach
+            Coffee-Chat Copilot
           </h1>
           <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
             Tell us a bit about yourself to get your personalized networking guide!
