@@ -6,7 +6,7 @@ import { Guide, GuideContent, ActionableStep } from '../../../lib/store'
 import { 
   Users, 
   Briefcase, 
-  LightBulb, 
+  Lightbulb, 
   MessageSquare, 
   BookOpen, 
   Calendar, 
@@ -18,7 +18,6 @@ import {
   FileText, 
   Search, 
   Building, 
-  Handshake, 
   ThumbsUp, 
   PenTool, 
   Clock, 
@@ -28,7 +27,8 @@ import {
   Target,
   Zap,
   Star,
-  Heart
+  Heart,
+  Handshake2
 } from 'lucide-react'
 
 export default function GuidePage() {
@@ -49,7 +49,7 @@ export default function GuidePage() {
     // Basic icons
     UsersIcon: <Users className="w-5 h-5 text-orange" />,
     BriefcaseIcon: <Briefcase className="w-5 h-5 text-orange" />,
-    LightbulbIcon: <LightBulb className="w-5 h-5 text-orange" />,
+    LightbulbIcon: <Lightbulb className="w-5 h-5 text-orange" />,
     MessageSquareIcon: <MessageSquare className="w-5 h-5 text-orange" />,
     BookOpenIcon: <BookOpen className="w-5 h-5 text-orange" />,
     CalendarIcon: <Calendar className="w-5 h-5 text-orange" />,
@@ -61,7 +61,7 @@ export default function GuidePage() {
     FileTextIcon: <FileText className="w-5 h-5 text-orange" />,
     SearchIcon: <Search className="w-5 h-5 text-orange" />,
     BuildingIcon: <Building className="w-5 h-5 text-orange" />,
-    HandshakeIcon: <Handshake className="w-5 h-5 text-orange" />,
+    HandshakeIcon: <Handshake2 className="w-5 h-5 text-orange" />,
     ThumbsUpIcon: <ThumbsUp className="w-5 h-5 text-orange" />,
     PenToolIcon: <PenTool className="w-5 h-5 text-orange" />,
     ClockIcon: <Clock className="w-5 h-5 text-orange" />,
