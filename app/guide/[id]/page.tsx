@@ -3,6 +3,33 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Guide, GuideContent, ActionableStep } from '../../../lib/store'
+import { 
+  Users, 
+  Briefcase, 
+  LightBulb, 
+  MessageSquare, 
+  BookOpen, 
+  Calendar, 
+  Mail, 
+  Phone, 
+  Globe, 
+  Award, 
+  Coffee, 
+  FileText, 
+  Search, 
+  Building, 
+  Handshake, 
+  ThumbsUp, 
+  PenTool, 
+  Clock, 
+  CheckCircle, 
+  AlertCircle,
+  Compass,
+  Target,
+  Zap,
+  Star,
+  Heart
+} from 'lucide-react'
 
 export default function GuidePage() {
   // State for guide data, loading and error
@@ -16,6 +43,48 @@ export default function GuidePage() {
   
   // Router for navigation
   const router = useRouter()
+  
+  // Icon mapping - maps the icon names to actual icon components
+  const iconMap: Record<string, React.ReactNode> = {
+    // Basic icons
+    UsersIcon: <Users className="w-5 h-5 text-orange" />,
+    BriefcaseIcon: <Briefcase className="w-5 h-5 text-orange" />,
+    LightbulbIcon: <LightBulb className="w-5 h-5 text-orange" />,
+    MessageSquareIcon: <MessageSquare className="w-5 h-5 text-orange" />,
+    BookOpenIcon: <BookOpen className="w-5 h-5 text-orange" />,
+    CalendarIcon: <Calendar className="w-5 h-5 text-orange" />,
+    MailIcon: <Mail className="w-5 h-5 text-orange" />,
+    PhoneIcon: <Phone className="w-5 h-5 text-orange" />,
+    GlobeIcon: <Globe className="w-5 h-5 text-orange" />,
+    AwardIcon: <Award className="w-5 h-5 text-orange" />,
+    CoffeeIcon: <Coffee className="w-5 h-5 text-orange" />,
+    FileTextIcon: <FileText className="w-5 h-5 text-orange" />,
+    SearchIcon: <Search className="w-5 h-5 text-orange" />,
+    BuildingIcon: <Building className="w-5 h-5 text-orange" />,
+    HandshakeIcon: <Handshake className="w-5 h-5 text-orange" />,
+    ThumbsUpIcon: <ThumbsUp className="w-5 h-5 text-orange" />,
+    PenToolIcon: <PenTool className="w-5 h-5 text-orange" />,
+    ClockIcon: <Clock className="w-5 h-5 text-orange" />,
+    CheckCircleIcon: <CheckCircle className="w-5 h-5 text-orange" />,
+    AlertCircleIcon: <AlertCircle className="w-5 h-5 text-orange" />,
+    CompassIcon: <Compass className="w-5 h-5 text-orange" />,
+    TargetIcon: <Target className="w-5 h-5 text-orange" />,
+    ZapIcon: <Zap className="w-5 h-5 text-orange" />,
+    StarIcon: <Star className="w-5 h-5 text-orange" />,
+    HeartIcon: <Heart className="w-5 h-5 text-orange" />,
+    
+    // Fallback for unknown icons
+    DefaultIcon: <Coffee className="w-5 h-5 text-orange" />
+  }
+  
+  // Helper function to get the icon component
+  const getIcon = (iconName: string) => {
+    // Clean up icon name (remove spaces, ensure consistency)
+    const cleanIconName = iconName.replace(/\s+/g, '');
+    
+    // Return the icon or default if not found
+    return iconMap[cleanIconName] || iconMap.DefaultIcon;
+  }
   
   // Fetch the guide data on component mount
   useEffect(() => {
@@ -201,12 +270,16 @@ export default function GuidePage() {
                       {index + 1}
                     </div>
                   </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-gray-800 mb-1">
-                      {step.title}
-                    </h4>
+                  <div className="flex-1">
+                    <div className="flex items-center mb-1">
+                      <h4 className="text-lg font-medium text-gray-800 mr-2">
+                        {step.title}
+                      </h4>
+                      <div className="flex items-center">
+                        {getIcon(step.iconName)}
+                      </div>
+                    </div>
                     <p className="text-gray-600">{step.description}</p>
-                    <p className="text-xs text-gray-600 mt-1">Icon: {step.iconName}</p>
                   </div>
                 </div>
               ))}
