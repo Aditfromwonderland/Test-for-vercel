@@ -64,45 +64,59 @@ export async function GET(
         { guide: result.Item },
         { status: 200 }
       );
-    } catch (dbError) {
+    } catch (dbError: unknown) {
       // Detailed error logging for DynamoDB errors
       console.error("DynamoDB error details:");
-      console.error(`Error name: ${dbError.name}`);
-      console.error(`Error message: ${dbError.message}`);
-      console.error(`Error stack: ${dbError.stack}`);
       
-      // Check for specific DynamoDB error types
-      if (dbError.name === 'ResourceNotFoundException') {
-        return NextResponse.json(
-          { message: "Database table not found. Please check configuration." },
-          { status: 500 }
-        );
-      } else if (dbError.name === 'AccessDeniedException') {
-        return NextResponse.json(
-          { message: "Access denied to database. Please check IAM permissions." },
-          { status: 500 }
-        );
+      // Safe error property access with type checking
+      if (dbError && typeof dbError === 'object') {
+        const errorObj = dbError as Record<string, any>;
+        console.error(`Error name: ${errorObj.name || 'Unknown error name'}`);
+        console.error(`Error message: ${errorObj.message || 'No error message available'}`);
+        console.error(`Error stack: ${errorObj.stack || 'No stack trace available'}`);
+        
+        // Check for specific DynamoDB error types
+        if (errorObj.name === 'ResourceNotFoundException') {
+          return NextResponse.json(
+            { message: "Database table not found. Please check configuration." },
+            { status: 500 }
+          );
+        } else if (errorObj.name === 'AccessDeniedException') {
+          return NextResponse.json(
+            { message: "Access denied to database. Please check IAM permissions." },
+            { status: 500 }
+          );
+        }
       } else {
-        return NextResponse.json(
-          { 
-            message: "Database error while fetching guide",
-            error: dbError.message 
-          },
-          { status: 500 }
-        );
+        console.error(`Error: ${String(dbError)}`);
       }
+      
+      return NextResponse.json(
+        { 
+          message: "Database error while fetching guide",
+          error: dbError instanceof Error ? dbError.message : String(dbError)
+        },
+        { status: 500 }
+      );
     }
-  } catch (error) {
+  } catch (error: unknown) {
     // Handle any unexpected errors
     console.error("Unexpected error in guide retrieval API:");
-    console.error(`Error name: ${error.name}`);
-    console.error(`Error message: ${error.message}`);
-    console.error(`Error stack: ${error.stack}`);
+    
+    // Safe error property access with type checking
+    if (error && typeof error === 'object') {
+      const errorObj = error as Record<string, any>;
+      console.error(`Error name: ${errorObj.name || 'Unknown error name'}`);
+      console.error(`Error message: ${errorObj.message || 'No error message available'}`);
+      console.error(`Error stack: ${errorObj.stack || 'No stack trace available'}`);
+    } else {
+      console.error(`Error: ${String(error)}`);
+    }
     
     return NextResponse.json(
       { 
         message: "Server error while processing guide request",
-        error: error.message 
+        error: error instanceof Error ? error.message : String(error)
       },
       { status: 500 }
     );
