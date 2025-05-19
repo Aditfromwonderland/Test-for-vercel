@@ -27,8 +27,7 @@ import {
   Target,
   Zap,
   Star,
-  Heart,
-  Handshake2
+  Heart
 } from 'lucide-react'
 
 export default function GuidePage() {
@@ -61,7 +60,7 @@ export default function GuidePage() {
     FileTextIcon: <FileText className="w-5 h-5 text-orange" />,
     SearchIcon: <Search className="w-5 h-5 text-orange" />,
     BuildingIcon: <Building className="w-5 h-5 text-orange" />,
-    HandshakeIcon: <Handshake2 className="w-5 h-5 text-orange" />,
+    HandshakeIcon: <Award className="w-5 h-5 text-orange" />,
     ThumbsUpIcon: <ThumbsUp className="w-5 h-5 text-orange" />,
     PenToolIcon: <PenTool className="w-5 h-5 text-orange" />,
     ClockIcon: <Clock className="w-5 h-5 text-orange" />,

@@ -56,7 +56,7 @@ export async function POST(request: Request) {
             {
               "title": "Short, actionable title",
               "description": "Detailed explanation of the step (1-3 sentences)",
-              "iconName": "A relevant icon name from Heroicons/Lucide (e.g., 'BriefcaseIcon', 'LightbulbIcon', 'UsersIcon')"
+              "iconName": "A relevant icon name from Lucide React (e.g., 'BriefcaseIcon', 'LightbulbIcon', 'UsersIcon', 'AwardIcon', 'FileTextIcon', 'CompassIcon', 'TargetIcon', 'MessageSquareIcon', 'BookOpenIcon', 'CalendarIcon')"
             }
           ],
           "conversationStarters": ["List of 3-5 conversation starters tailored to consulting and their experience"],
