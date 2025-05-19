@@ -6,9 +6,19 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Coffee-Chat Coach',
-  description: 'Get personalized networking advice tailored to your background and challenges',
-  keywords: 'networking, career advice, coffee chat, professional development',
+  title: 'Coffee-Chat Copilot',
+  description: 'Get personalized networking advice tailored to your consulting coffee chats',
+  keywords: 'consulting, coffee chat, networking, career advice, professional development',
+  authors: [{ name: 'Coffee-Chat Copilot Team' }],
+  openGraph: {
+    title: 'Coffee-Chat Copilot',
+    description: 'Personalized advice for consulting coffee chats',
+    siteName: 'Coffee-Chat Copilot',
+  },
+  twitter: {
+    title: 'Coffee-Chat Copilot',
+    description: 'Personalized advice for consulting coffee chats',
+  }
 };
 
 export default function RootLayout({
